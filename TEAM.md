@@ -18,8 +18,8 @@ update it before every push.** Keep entries short; newest first in each log.
 |---|---|
 | 1. Setup, DB config, base layout | ✅ done |
 | 2. Enums, entities, migration | ✅ done, migration applied on the shared DB |
-| 3. Auth (register, login, roles) | ⏳ next (Hedi) |
-| 4. Public catalogue | ⬜ |
+| 3. Auth (register, login, roles) | ✅ done (branch `hedi`) |
+| 4. Public catalogue | ⏳ next (Hedi) |
 | 5. Booking flow | ⬜ |
 | 6. Client area | ⬜ |
 | 7. Reviews | ⬜ |
@@ -46,6 +46,11 @@ _None yet._ Format: `ClassName::method(args)` — what it does — owner.
 - `Payment.method` is nullable: payment is created with the reservation, before card/cash is chosen.
 - `Payment` owns the OneToOne (`payment.reservation_id`); `Reservation::setPayment()` syncs both sides, cascade persist.
 - DB is XAMPP MariaDB 10.4 on the friend's machine (`serverVersion=10.4.32-MariaDB`); generated SQL is identical to MySQL's.
+- Registration asks first name, last name, email, password (min 6). No email verification, no terms checkbox;
+  the user is logged in right after registering. Logout redirects to `app_home`.
+- `security.yaml`: `role_hierarchy ROLE_ADMIN: ROLE_USER`; `access_control` has `^/admin` → ROLE_ADMIN and
+  `^/account` → ROLE_USER. Routes outside those prefixes (`/cars/{id}/book`, `/cars/{id}/review`) use `#[IsGranted]`.
+  Admin rules are already there — no need to add them again.
 - Navbar links are plain URLs until their route exists, then switched to `path()`.
 
 ## Entity / migration log
@@ -53,4 +58,5 @@ _None yet._ Format: `ClassName::method(args)` — what it does — owner.
 
 ## Messages
 Questions, heads-ups, requests for the other person. Remove when resolved.
-- _(empty)_
+- (Hedi) Login form route is `app_login`, field names `_username` / `_password`. Fixtures must hash passwords
+  with `UserPasswordHasherInterface`; admin gets `roles: ['ROLE_ADMIN']`.
