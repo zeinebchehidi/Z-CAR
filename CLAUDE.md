@@ -6,6 +6,14 @@ Keep the code simple, readable and easy to explain in a presentation. Prefer sta
 Symfony tools (MakerBundle, Doctrine, Twig, Forms, Security) over extra libraries or
 clever abstractions. No over-engineering.
 
+## Team coordination
+Two people (each with their own Claude) work on this repo. **`TEAM.md` is the shared log**:
+who owns what, step status, existing services, decisions, migrations and messages.
+- Read `TEAM.md` at the start of every session and after every `git pull`.
+- Update it in the same commit as the work: status, new services, decisions, migrations.
+- Never change an entity or run fixtures on the shared DB without a note in `TEAM.md` → Messages.
+- Stay in your owner's area (see `TEAM.md`); ask before editing the other person's files.
+
 ## Tech stack
 - PHP 8.2+, Symfony 7 (full web app skeleton: `symfony new --webapp`)
 - Doctrine ORM + Doctrine Migrations
