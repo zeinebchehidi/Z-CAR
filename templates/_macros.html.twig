@@ -1,0 +1,28 @@
+{# Shared UI helpers. Usage: {% import '_macros.html.twig' as ui %} then {{ ui.status_badge(reservation.status) }} #}
+
+{# Same badge colours everywhere. Accepts a backed enum (ReservationStatus, PaymentStatus) or its string value. #}
+{% macro status_badge(status) %}
+    {% set value = status.value is defined ? status.value : status %}
+    {% set colors = {
+        pending: 'warning',
+        confirmed: 'primary',
+        completed: 'success',
+        cancelled: 'secondary',
+        paid: 'success',
+        refunded: 'info',
+    } %}
+    {% set color = colors[value] ?? 'light' %}
+    <span class="badge rounded-pill text-bg-{{ color }}">{{ value|capitalize }}</span>
+{% endmacro %}
+
+{# Rating as ★ characters, e.g. 4.3 → ★★★★☆. Pass null when there are no reviews yet. #}
+{% macro stars(rating) %}
+    {% if rating is null %}
+        <span class="text-muted small">No reviews yet</span>
+    {% else %}
+        {% set full = rating|round %}
+        <span class="text-warning" title="{{ rating|number_format(1) }} / 5" aria-label="Rated {{ rating|number_format(1) }} out of 5">
+            {%- for i in 1..5 %}{{ i <= full ? '★' : '☆' }}{% endfor -%}
+        </span>
+    {% endif %}
+{% endmacro %}

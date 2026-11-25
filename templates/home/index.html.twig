@@ -3,9 +3,70 @@
 {% block title %}Home - Car Rental{% endblock %}
 
 {% block body %}
-    <div class="p-5 mb-4 bg-white rounded-3 shadow-sm">
+    <div class="p-4 p-lg-5 mb-5 bg-dark text-white rounded-3">
         <h1 class="display-5 fw-bold">Rent a car in a few clicks</h1>
-        <p class="fs-5 text-muted">Browse our cars, pick your dates and book online.</p>
-        <a class="btn btn-primary btn-lg" href="/cars">See all cars</a>
+        <p class="fs-5 text-white-50">Pick your dates, choose a car, drive away. Pay by card now or cash at pickup.</p>
+
+        {# Quick search: plain GET form to /cars, which reads the same filter names. #}
+        <form action="/cars" method="get" class="row g-3 align-items-end bg-white text-body rounded-3 p-3 mt-4">
+            <div class="col-md-3">
+                <label for="search-start" class="form-label fw-semibold">Pickup date</label>
+                <input type="date" id="search-start" name="start" class="form-control" min="{{ 'now'|date('Y-m-d') }}">
+            </div>
+            <div class="col-md-3">
+                <label for="search-end" class="form-label fw-semibold">Return date</label>
+                <input type="date" id="search-end" name="end" class="form-control" min="{{ 'now'|date('Y-m-d') }}">
+            </div>
+            <div class="col-md-3">
+                <label for="search-category" class="form-label fw-semibold">Category</label>
+                <select id="search-category" name="category" class="form-select">
+                    <option value="">All categories</option>
+                    {% for category in categories|default([]) %}
+                        <option value="{{ category.id }}">{{ category.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3 d-grid">
+                <button type="submit" class="btn btn-primary"><i class="bi bi-search"></i> Search</button>
+            </div>
+        </form>
     </div>
+
+    <section class="mb-5">
+        <div class="d-flex justify-content-between align-items-baseline mb-3">
+            <h2 class="h3 mb-0">Featured cars</h2>
+            <a href="/cars">See all cars &rarr;</a>
+        </div>
+        {# featured_cars is passed by HomeController once the Car entity exists (step 4). #}
+        {% if featured_cars|default([]) is empty %}
+            <p class="text-muted">No cars yet. <a href="/cars">Browse cars</a></p>
+        {% else %}
+            <div class="row row-cols-1 row-cols-md-3 g-4">
+                {% for car in featured_cars %}
+                    <div class="col">{{ include('car/_card.html.twig', { car: car }) }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </section>
+
+    <section>
+        <h2 class="h3 mb-3">How it works</h2>
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% for step in [
+                { icon: 'search', title: 'Choose', text: 'Filter by category, fuel, gearbox and price, then pick your dates.' },
+                { icon: 'calendar-check', title: 'Book', text: 'See the total price instantly and confirm. Pay by card or cash at pickup.' },
+                { icon: 'key', title: 'Drive', text: 'Pick up the keys and go. Leave a review when you bring the car back.' },
+            ] %}
+                <div class="col">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body">
+                            <i class="bi bi-{{ step.icon }} fs-2 text-primary"></i>
+                            <h3 class="h5 mt-2">{{ loop.index }}. {{ step.title }}</h3>
+                            <p class="text-muted mb-0">{{ step.text }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
 {% endblock %}

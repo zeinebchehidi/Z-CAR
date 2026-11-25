@@ -1,0 +1,44 @@
+{# Back-office layout: dark sidebar on the left, content on the right.
+   Admin pages do {% extends 'admin/base.html.twig' %} and fill {% block body %}. #}
+{% extends 'base.html.twig' %}
+
+{% block main %}
+    {# shortcut: counters come from optional template variables; move them to a Twig global or
+       a small service in step 8 so every admin page shows them without each controller passing them. #}
+    {% set links = [
+        { url: '/admin', label: 'Dashboard', icon: 'speedometer2' },
+        { url: '/admin/cars', label: 'Cars', icon: 'car-front' },
+        { url: '/admin/categories', label: 'Categories', icon: 'tags' },
+        { url: '/admin/reservations', label: 'Reservations', icon: 'calendar' },
+        { url: '/admin/payments', label: 'Payments', icon: 'credit-card', count: pending_cash_payments|default(0) },
+        { url: '/admin/reviews', label: 'Reviews', icon: 'star', count: pending_reviews|default(0) },
+        { url: '/admin/users', label: 'Users', icon: 'people' },
+    ] %}
+    <div class="container-fluid">
+        <div class="row">
+            <nav class="col-lg-2 admin-sidebar bg-dark py-3" aria-label="Admin">
+                <ul class="nav nav-pills flex-column gap-1">
+                    {% for link in links %}
+                        {# Dashboard is only active on /admin itself, the others on their whole section. #}
+                        {% set active = link.url == '/admin'
+                            ? app.request.pathInfo in ['/admin', '/admin/']
+                            : app.request.pathInfo starts with link.url %}
+                        <li class="nav-item">
+                            <a href="{{ link.url }}" class="nav-link d-flex align-items-center gap-2 {{ active ? 'active' : 'text-white-50' }}"
+                               {% if active %}aria-current="page"{% endif %}>
+                                <i class="bi bi-{{ link.icon }}"></i> {{ link.label }}
+                                {% if link.count|default(0) > 0 %}
+                                    <span class="badge rounded-pill text-bg-warning ms-auto">{{ link.count }}</span>
+                                {% endif %}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </nav>
+            <main class="col-lg-10 p-4">
+                {{ include('_flashes.html.twig') }}
+                {% block body %}{% endblock %}
+            </main>
+        </div>
+    </div>
+{% endblock %}

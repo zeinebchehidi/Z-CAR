@@ -1,1 +1,42 @@
-/* Custom styles go here (Bootstrap is loaded from the CDN in base.html.twig). */
+/* Custom styles go here (Bootstrap is loaded from the CDN in base.html.twig).
+   The only accent colour is Bootstrap's default primary blue. */
+
+/* Car cards: same image height on every card. */
+.car-card-img {
+    height: 180px;
+    object-fit: cover;
+}
+
+/* Admin sidebar fills the screen height on desktop. */
+@media (min-width: 992px) {
+    .admin-sidebar {
+        min-height: calc(100vh - 80px);
+    }
+}
+
+/* Clickable star rating, CSS only. Put the radios in order 5 → 1:
+   row-reverse shows them as 1 → 5, and "~" colours every star before the checked one. */
+.star-rating {
+    display: inline-flex;
+    flex-direction: row-reverse;
+    gap: .25rem;
+}
+.star-rating input {
+    position: absolute;
+    opacity: 0;
+}
+.star-rating label {
+    font-size: 2rem;
+    line-height: 1;
+    color: #ced4da;
+    cursor: pointer;
+}
+.star-rating input:checked ~ label,
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+    color: var(--bs-warning);
+}
+.star-rating input:focus-visible + label {
+    outline: 2px solid var(--bs-primary);
+    border-radius: .25rem;
+}

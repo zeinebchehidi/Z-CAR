@@ -1,0 +1,25 @@
+{# Shared layout for every /account page: side menu on the left, page content on the right.
+   Account pages do {% extends 'account/_layout.html.twig' %} and fill {% block account_content %}. #}
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% set links = {
+        '/account/profile': 'Profile',
+        '/account/reservations': 'My reservations',
+        '/account/payments': 'My payments',
+    } %}
+    <div class="row g-4">
+        <div class="col-lg-3">
+            <div class="list-group">
+                {% for url, label in links %}
+                    {% set active = app.request.pathInfo starts with url %}
+                    <a href="{{ url }}" class="list-group-item list-group-item-action {{ active ? 'active' }}"
+                       {% if active %}aria-current="page"{% endif %}>{{ label }}</a>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="col-lg-9">
+            {% block account_content %}{% endblock %}
+        </div>
+    </div>
+{% endblock %}
