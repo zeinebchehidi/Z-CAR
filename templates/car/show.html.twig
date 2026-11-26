@@ -1,0 +1,81 @@
+{% extends 'base.html.twig' %}
+{% import '_macros.html.twig' as ui %}
+
+{% block title %}{{ car.brand }} {{ car.model }} - Car Rental{% endblock %}
+
+{% block body %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ path('app_car_index') }}">Cars</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ car.brand }} {{ car.model }}</li>
+        </ol>
+    </nav>
+
+    <div class="row g-4">
+        {# Left: photo + specs #}
+        <div class="col-lg-8">
+            <img src="{{ car.image ? asset('uploads/cars/' ~ car.image) : asset('images/car-placeholder.png') }}"
+                 class="img-fluid rounded-3 shadow-sm w-100 mb-4" style="max-height: 420px; object-fit: cover;"
+                 alt="{{ car.brand }} {{ car.model }}">
+
+            <h1 class="h2">
+                {{ car.brand }} {{ car.model }} <span class="text-muted fw-normal">· {{ car.year }}</span>
+                {% if not car.available %}<span class="badge text-bg-secondary align-middle fs-6">Not available</span>{% endif %}
+            </h1>
+
+            <table class="table table-sm bg-white mt-3">
+                <tbody>
+                    <tr><th class="w-25"><i class="bi bi-tag"></i> Category</th><td>{{ car.category.name }}</td></tr>
+                    <tr><th><i class="bi bi-fuel-pump"></i> Fuel</th><td>{{ car.fuelType.value|capitalize }}</td></tr>
+                    <tr><th><i class="bi bi-gear"></i> Gearbox</th><td>{{ car.transmission.value|capitalize }}</td></tr>
+                    <tr><th><i class="bi bi-people"></i> Seats</th><td>{{ car.seats }}</td></tr>
+                    <tr><th><i class="bi bi-card-text"></i> Plate</th><td>{{ car.plateNumber }}</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        {# Right: booking card, stays visible while scrolling #}
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm sticky-top" style="top: 1rem;">
+                <div class="card-body">
+                    <p class="mb-1"><span class="display-6 fw-bold">€{{ car.pricePerDay|number_format(2) }}</span> <span class="text-muted">/ day</span></p>
+                    <p class="mb-3">
+                        {{ ui.stars(averageRating) }}
+                        {% if reviews is not empty %}<span class="text-muted small">({{ reviews|length }} review{{ reviews|length == 1 ? '' : 's' }})</span>{% endif %}
+                    </p>
+
+                    {% if car.available %}
+                        {# The booking page (step 5) is login-protected: visitors are sent to the login page first. #}
+                        <div class="d-grid">
+                            <a href="/cars/{{ car.id }}/book" class="btn btn-primary btn-lg"><i class="bi bi-calendar-check"></i> Book now</a>
+                        </div>
+                        {% if not app.user %}
+                            <p class="text-muted small text-center mt-2 mb-0">You will be asked to log in.</p>
+                        {% endif %}
+                    {% else %}
+                        <div class="alert alert-secondary mb-0">This car cannot be booked at the moment.</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Approved reviews only #}
+    <section class="mt-5">
+        <h2 class="h4 mb-3">Reviews</h2>
+        {% for review in reviews %}
+            <div class="card border-0 shadow-sm mb-3">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <strong>{{ review.user.firstName }} {{ review.user.lastName|first }}.</strong>
+                        <span class="text-muted small">{{ review.createdAt|date('d/m/Y') }}</span>
+                    </div>
+                    {{ ui.stars(review.rating) }}
+                    <p class="mb-0 mt-2">{{ review.comment }}</p>
+                </div>
+            </div>
+        {% else %}
+            <p class="text-muted">No reviews yet for this car.</p>
+        {% endfor %}
+    </section>
+{% endblock %}

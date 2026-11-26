@@ -26,7 +26,7 @@
                 {# Links use plain URLs for now; they will switch to path() as each route is created. #}
                 <div class="collapse navbar-collapse" id="mainNav">
                     <ul class="navbar-nav me-auto">
-                        <li class="nav-item"><a class="nav-link" href="/cars">Cars</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ path('app_car_index') }}">Cars</a></li>
                         {% if is_granted('ROLE_USER') %}
                             <li class="nav-item"><a class="nav-link" href="/account/reservations">My reservations</a></li>
                             <li class="nav-item"><a class="nav-link" href="/account/payments">My payments</a></li>

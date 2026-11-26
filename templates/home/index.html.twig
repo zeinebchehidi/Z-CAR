@@ -8,7 +8,7 @@
         <p class="fs-5 text-white-50">Pick your dates, choose a car, drive away. Pay by card now or cash at pickup.</p>
 
         {# Quick search: plain GET form to /cars, which reads the same filter names. #}
-        <form action="/cars" method="get" class="row g-3 align-items-end bg-white text-body rounded-3 p-3 mt-4">
+        <form action="{{ path('app_car_index') }}" method="get" class="row g-3 align-items-end bg-white text-body rounded-3 p-3 mt-4">
             <div class="col-md-3">
                 <label for="search-start" class="form-label fw-semibold">Pickup date</label>
                 <input type="date" id="search-start" name="start" class="form-control" min="{{ 'now'|date('Y-m-d') }}">
@@ -35,15 +35,14 @@
     <section class="mb-5">
         <div class="d-flex justify-content-between align-items-baseline mb-3">
             <h2 class="h3 mb-0">Featured cars</h2>
-            <a href="/cars">See all cars &rarr;</a>
+            <a href="{{ path('app_car_index') }}">See all cars &rarr;</a>
         </div>
-        {# featured_cars is passed by HomeController once the Car entity exists (step 4). #}
         {% if featured_cars|default([]) is empty %}
-            <p class="text-muted">No cars yet. <a href="/cars">Browse cars</a></p>
+            <p class="text-muted">No cars yet. <a href="{{ path('app_car_index') }}">Browse cars</a></p>
         {% else %}
             <div class="row row-cols-1 row-cols-md-3 g-4">
                 {% for car in featured_cars %}
-                    <div class="col">{{ include('car/_card.html.twig', { car: car }) }}</div>
+                    <div class="col">{{ include('car/_card.html.twig', { car: car, rating: ratings[car.id] ?? null }) }}</div>
                 {% endfor %}
             </div>
         {% endif %}

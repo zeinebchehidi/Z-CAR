@@ -15,4 +15,21 @@ class ReviewRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Review::class);
     }
+
+    /**
+     * Average rating of approved reviews for every car, in one query (for the car cards).
+     *
+     * @return array<int, float> car id => average rating
+     */
+    public function findAverageRatings(): array
+    {
+        $rows = $this->createQueryBuilder('r')
+            ->select('IDENTITY(r.car) AS carId', 'AVG(r.rating) AS average')
+            ->andWhere('r.isApproved = true')
+            ->groupBy('r.car')
+            ->getQuery()
+            ->getArrayResult();
+
+        return array_map('floatval', array_column($rows, 'average', 'carId'));
+    }
 }
