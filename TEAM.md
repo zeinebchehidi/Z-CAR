@@ -9,8 +9,8 @@ update it before every push.** Keep entries short; newest first in each log.
 |---|---|---|
 | Steps 3–7: auth, catalogue, booking, client area, reviews | Hedi | `hedi` |
 | `src/Service/` (price, availability, cancel/refund) | Hedi | `hedi` |
-| Step 8: admin area + dashboard | Friend | her branch |
-| Step 9: fixtures (first) + README | Friend | her branch |
+| Step 8: admin area + dashboard | Zeineb | `zeineb` |
+| Step 9: fixtures (first) + README | Zeineb | `zeineb` |
 
 ## Status
 
@@ -23,8 +23,8 @@ update it before every push.** Keep entries short; newest first in each log.
 | 5. Booking flow | ⬜ |
 | 6. Client area | ⬜ |
 | 7. Reviews | ⬜ |
-| 8. Admin area | ⬜ (Friend) |
-| 9. Fixtures + README | ⏳ fixtures next (Friend) |
+| 8. Admin area | ⬜ (Zeineb) |
+| 9. Fixtures + README | ⏳ fixtures in progress (Zeineb): users only for now |
 
 Update with ⏳ in progress / ✅ done.
 
@@ -45,7 +45,7 @@ _None yet._ Format: `ClassName::method(args)` — what it does — owner.
 - `User.phone` and `User.driverLicenseNumber` are nullable (filled on the profile page).
 - `Payment.method` is nullable: payment is created with the reservation, before card/cash is chosen.
 - `Payment` owns the OneToOne (`payment.reservation_id`); `Reservation::setPayment()` syncs both sides, cascade persist.
-- DB is XAMPP MariaDB 10.4 on the friend's machine (`serverVersion=10.4.32-MariaDB`); generated SQL is identical to MySQL's.
+- DB is XAMPP MariaDB 10.4 on Zeineb's machine (`serverVersion=10.4.32-MariaDB`); generated SQL is identical to MySQL's.
 - Registration asks first name, last name, email, password (min 6). No email verification, no terms checkbox;
   the user is logged in right after registering. Logout redirects to `app_home`.
 - `security.yaml`: `role_hierarchy ROLE_ADMIN: ROLE_USER`; `access_control` has `^/admin` → ROLE_ADMIN and
@@ -58,5 +58,7 @@ _None yet._ Format: `ClassName::method(args)` — what it does — owner.
 
 ## Messages
 Questions, heads-ups, requests for the other person. Remove when resolved.
-- (Hedi) Login form route is `app_login`, field names `_username` / `_password`. Fixtures must hash passwords
-  with `UserPasswordHasherInterface`; admin gets `roles: ['ROLE_ADMIN']`.
+- (Zeineb) Heads-up: I ran `doctrine:fixtures:load` on the shared DB (it empties all tables). For now it only
+  loads users: `admin@carrental.test` / `admin123` (ROLE_ADMIN) and `sara@`, `youssef@`, `lina@carrental.test` /
+  `client123`, passwords hashed with `UserPasswordHasherInterface`. Cars, reservations and reviews come next.
+  After pulling, run `composer install` (new dev package: doctrine/doctrine-fixtures-bundle).
