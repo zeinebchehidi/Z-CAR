@@ -23,7 +23,7 @@ update it before every push.** Keep entries short; newest first in each log.
 | 5. Booking flow | ⬜ |
 | 6. Client area | ⬜ |
 | 7. Reviews | ⬜ |
-| 8. Admin area | ⬜ (Zeineb) |
+| 8. Admin area | ⏳ in progress (Zeineb): categories ✅ · cars, users, reservations, payments, reviews, dashboard ⬜ |
 | 9. Fixtures + README | ✅ fixtures done (Zeineb) · README ⬜ |
 
 Update with ⏳ in progress / ✅ done.
@@ -52,6 +52,11 @@ _None yet._ Format: `ClassName::method(args)` — what it does — owner.
   `^/account` → ROLE_USER. Routes outside those prefixes (`/cars/{id}/book`, `/cars/{id}/review`) use `#[IsGranted]`.
   Admin rules are already there — no need to add them again.
 - Navbar links are plain URLs until their route exists, then switched to `path()`.
+- Admin pages: controllers in `src/Controller/Admin/` with `#[IsGranted('ROLE_ADMIN')]` on the class, templates in
+  `templates/admin/<entity>/` extending `admin/base.html.twig`. URLs are plural to match the sidebar
+  (`/admin/categories`), route names are `admin_<entity>_<action>` (e.g. `admin_category_index`).
+  No separate "show" page when the list already shows everything. Deletes are `POST /{id}/delete` with a CSRF token.
+- A category that still has cars cannot be deleted (flash error), because `Car.category` is not nullable.
 
 ## Entity / migration log
 - `Version20261125200000` — initial schema (all 6 entities) — Hedi — applied.
