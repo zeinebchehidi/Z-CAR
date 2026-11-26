@@ -17,10 +17,10 @@ update it before every push.** Keep entries short; newest first in each log.
 | Step | Status |
 |---|---|
 | 1. Setup, DB config, base layout | ✅ done |
-| 2. Enums, entities, migration | ✅ done, migration applied on the shared DB |
+| 2. Enums, entities, migration | ✅ done |
 | 3. Auth (register, login, roles) | ✅ done (branch `hedi`) |
-| 4. Public catalogue | ⏳ next (Hedi) |
-| 5. Booking flow | ⬜ |
+| 4. Public catalogue | ✅ done (branch `hedi`), tested with the fixtures |
+| 5. Booking flow | ⏳ next (Hedi) |
 | 6. Client area | ⬜ |
 | 7. Reviews | ⬜ |
 | 8. Admin area | ⬜ (Zeineb) |
@@ -30,22 +30,28 @@ Update with ⏳ in progress / ✅ done.
 
 ## Rules
 - **Entities / migrations:** announce here (Messages) before changing an entity. One migration at a time:
-  pull, `make:migration`, push right away. Only the author runs it on the shared DB.
-- **Shared DB:** check `php bin/console doctrine:migrations:status` before migrating.
-  Running fixtures wipes the DB for both of us — say so here first.
+  pull, `make:migration`, push right away.
+- **Own local DB each:** after every pull, run `php bin/console doctrine:migrations:migrate`
+  (and `doctrine:fixtures:load` if the fixtures changed). Fixtures only reset your own DB.
 - **Services:** business logic lives in `src/Service/`. Reuse, don't copy. New service → list it below.
 - **Templates:** reuse `_macros.html.twig`, `_flashes.html.twig`, `car/_card.html.twig`,
   `admin/base.html.twig`, `account/_layout.html.twig`.
 - Merge into `main` often; `security.yaml` is edited by both of us, expect small conflicts.
 
 ## Services and shared code (what exists, how to call it)
-_None yet._ Format: `ClassName::method(args)` — what it does — owner.
+Format: `ClassName::method(args)` — what it does — owner.
+- `ReservationRepository::findBookedCarIds(start, end)` — ids of cars with a non-cancelled reservation
+  overlapping [start, end] (business rule 1, the only place this rule is written) — Hedi
+- `CarRepository::search(array $filters)` — available cars matching the `CarSearchType` filters — Hedi
+- `ReviewRepository::findAverageRatings()` — `[carId => average]` of approved reviews, one query — Hedi
+- Routes: `app_car_index` (`/cars`), `app_car_show` (`/cars/{id}`). `car/_card.html.twig` takes `car` and optional `rating`.
 
 ## Decisions (differences from CLAUDE.md)
 - `User.phone` and `User.driverLicenseNumber` are nullable (filled on the profile page).
 - `Payment.method` is nullable: payment is created with the reservation, before card/cash is chosen.
 - `Payment` owns the OneToOne (`payment.reservation_id`); `Reservation::setPayment()` syncs both sides, cascade persist.
-- DB is XAMPP MariaDB 10.4 on Zeineb's machine (`serverVersion=10.4.32-MariaDB`); generated SQL is identical to MySQL's.
+- No shared DB: each of us runs a local MariaDB on 127.0.0.1 (Zeineb: XAMPP 10.4.32, Hedi: Debian 11.8).
+  Set your own `serverVersion` in `.env.local`. The schema SQL is identical on both versions (checked).
 - Registration asks first name, last name, email, password (min 6). No email verification, no terms checkbox;
   the user is logged in right after registering. Logout redirects to `app_home`.
 - `security.yaml`: `role_hierarchy ROLE_ADMIN: ROLE_USER`; `access_control` has `^/admin` → ROLE_ADMIN and
