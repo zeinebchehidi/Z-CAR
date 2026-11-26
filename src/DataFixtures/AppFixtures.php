@@ -36,12 +36,10 @@ class AppFixtures extends Fixture
     public function load(ObjectManager $manager): void
     {
         $clients = $this->loadUsers($manager);
-
-        // TEMPORARY: users only, to test the login. Uncomment to load everything.
-        // $categories = $this->loadCategories($manager);
-        // $cars = $this->loadCars($manager, $categories);
-        // $this->loadReservations($manager, $clients, $cars);
-        // $this->loadReviews($manager, $clients, $cars);
+        $categories = $this->loadCategories($manager);
+        $cars = $this->loadCars($manager, $categories);
+        $this->loadReservations($manager, $clients, $cars);
+        $this->loadReviews($manager, $clients, $cars);
 
         $manager->flush();
     }
@@ -120,17 +118,17 @@ class AppFixtures extends Fixture
         // [brand, model, year, plate, price per day, fuel, transmission, seats, category, available]
         $carData = [
             ['Renault', 'Clio', 2022, '201 TU 1001', '35.00', FuelType::Petrol, Transmission::Manual, 5, 'Economy', true],
-            ['Peugeot', '208', 2023, '201 TU 1002', '40.00', FuelType::Diesel, Transmission::Manual, 5, 'Economy', true],
+            ['Suzuki', 'Ignis', 2024, '201 TU 1002', '32.00', FuelType::Petrol, Transmission::Manual, 5, 'Economy', true],
             ['Kia', 'Picanto', 2021, '201 TU 1003', '30.00', FuelType::Petrol, Transmission::Automatic, 4, 'Economy', true],
-            ['Volkswagen', 'Golf', 2023, '201 TU 1004', '55.00', FuelType::Diesel, Transmission::Manual, 5, 'Compact', true],
-            ['Toyota', 'Corolla', 2022, '201 TU 1005', '60.00', FuelType::Hybrid, Transmission::Automatic, 5, 'Compact', true],
+            ['Volkswagen', 'Polo', 2022, '201 TU 1004', '45.00', FuelType::Diesel, Transmission::Manual, 5, 'Compact', true],
+            ['Volkswagen', 'Polo', 2024, '201 TU 1005', '50.00', FuelType::Petrol, Transmission::Automatic, 5, 'Compact', true],
             // In maintenance: cannot be booked.
             ['Hyundai', 'i30', 2021, '201 TU 1006', '50.00', FuelType::Petrol, Transmission::Manual, 5, 'Compact', false],
             ['Dacia', 'Duster', 2023, '201 TU 1007', '65.00', FuelType::Diesel, Transmission::Manual, 5, 'SUV', true],
             ['Kia', 'Sportage', 2024, '201 TU 1008', '85.00', FuelType::Hybrid, Transmission::Automatic, 5, 'SUV', true],
             ['Peugeot', '5008', 2023, '201 TU 1009', '90.00', FuelType::Diesel, Transmission::Automatic, 7, 'SUV', true],
-            ['Mercedes', 'C-Class', 2024, '201 TU 1010', '140.00', FuelType::Diesel, Transmission::Automatic, 5, 'Luxury', true],
-            ['BMW', '5 Series', 2023, '201 TU 1011', '160.00', FuelType::Petrol, Transmission::Automatic, 5, 'Luxury', true],
+            ['Mercedes', 'EQE', 2024, '201 TU 1010', '150.00', FuelType::Electric, Transmission::Automatic, 5, 'Luxury', true],
+            ['BMW', 'X7', 2023, '201 TU 1011', '200.00', FuelType::Diesel, Transmission::Automatic, 7, 'Luxury', true],
             ['Tesla', 'Model 3', 2024, '201 TU 1012', '120.00', FuelType::Electric, Transmission::Automatic, 5, 'Luxury', true],
         ];
 

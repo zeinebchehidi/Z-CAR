@@ -24,7 +24,7 @@ update it before every push.** Keep entries short; newest first in each log.
 | 6. Client area | ⬜ |
 | 7. Reviews | ⬜ |
 | 8. Admin area | ⬜ (Zeineb) |
-| 9. Fixtures + README | ⏳ fixtures in progress (Zeineb): users only for now |
+| 9. Fixtures + README | ✅ fixtures done (Zeineb) · README ⬜ |
 
 Update with ⏳ in progress / ✅ done.
 
@@ -58,7 +58,8 @@ _None yet._ Format: `ClassName::method(args)` — what it does — owner.
 
 ## Messages
 Questions, heads-ups, requests for the other person. Remove when resolved.
-- (Zeineb) Heads-up: I ran `doctrine:fixtures:load` on the shared DB (it empties all tables). For now it only
-  loads users: `admin@carrental.test` / `admin123` (ROLE_ADMIN) and `sara@`, `youssef@`, `lina@carrental.test` /
-  `client123`, passwords hashed with `UserPasswordHasherInterface`. Cars, reservations and reviews come next.
+- (Zeineb) Heads-up: I ran `doctrine:fixtures:load` on the shared DB (it empties all tables). It loads
+  4 users (`admin@carrental.test` / `admin123` ROLE_ADMIN; `sara@`, `youssef@`, `lina@carrental.test` / `client123`),
+  4 categories, 12 cars (6 with photos copied to `public/uploads/cars/`), 10 reservations in every status with
+  their payments, and 4 reviews (2 approved, 2 pending).
   After pulling, run `composer install` (new dev package: doctrine/doctrine-fixtures-bundle).
