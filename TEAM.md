@@ -23,7 +23,7 @@ update it before every push.** Keep entries short; newest first in each log.
 | 5. Booking flow | ⏳ next (Hedi) |
 | 6. Client area | ⬜ |
 | 7. Reviews | ⬜ |
-| 8. Admin area | ⏳ in progress (Zeineb): categories ✅ · cars, users, reservations, payments, reviews, dashboard ⬜ |
+| 8. Admin area | ⏳ in progress (Zeineb): categories ✅ · cars ✅ · users, reservations, payments, reviews, dashboard ⬜ |
 | 9. Fixtures + README | ✅ fixtures done (Zeineb) · README ⬜ |
 
 Update with ⏳ in progress / ✅ done.
@@ -63,14 +63,17 @@ Format: `ClassName::method(args)` — what it does — owner.
   (`/admin/categories`), route names are `admin_<entity>_<action>` (e.g. `admin_category_index`).
   No separate "show" page when the list already shows everything. Deletes are `POST /{id}/delete` with a CSRF token.
 - A category that still has cars cannot be deleted (flash error), because `Car.category` is not nullable.
+- Admin car photos: unmapped `imageFile` field (JPG/PNG/WebP, max 2 MB), saved as `public/uploads/cars/car-<uniqid>.<ext>`;
+  `Car.image` stores only the filename. Replacing or deleting a car removes the old file. Display path:
+  `asset('uploads/cars/' ~ car.image)`, fallback `images/car-placeholder.png` (same as `car/_card.html.twig`).
+- A car with reservations or reviews cannot be deleted (keeps the history): the admin unchecks "Available for booking".
 
 ## Entity / migration log
 - `Version20261125200000` — initial schema (all 6 entities) — Hedi — applied.
 
 ## Messages
 Questions, heads-ups, requests for the other person. Remove when resolved.
-- (Zeineb) Heads-up: I ran `doctrine:fixtures:load` on the shared DB (it empties all tables). It loads
-  4 users (`admin@carrental.test` / `admin123` ROLE_ADMIN; `sara@`, `youssef@`, `lina@carrental.test` / `client123`),
-  4 categories, 12 cars (6 with photos copied to `public/uploads/cars/`), 10 reservations in every status with
-  their payments, and 4 reviews (2 approved, 2 pending).
-  After pulling, run `composer install` (new dev package: doctrine/doctrine-fixtures-bundle).
+- (Zeineb) Fixtures: 4 users (`admin@carrental.test` / `admin123` ROLE_ADMIN; `sara@`, `youssef@`,
+  `lina@carrental.test` / `client123`), 4 categories, 12 cars (6 with photos), 10 reservations in every status
+  with their payments, 4 reviews (2 approved, 2 pending). For Step 5 (Hedi): I'll use your cancel/refund
+  services in the admin reservations/payments pages, so please list them here when they exist.

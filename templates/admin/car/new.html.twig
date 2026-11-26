@@ -1,0 +1,13 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}New car · Admin{% endblock %}
+
+{% block body %}
+    <h1 class="h3 mb-3">New car</h1>
+
+    <div class="card shadow-sm" style="max-width: 60rem;">
+        <div class="card-body">
+            {{ include('admin/car/_form.html.twig', {button_label: 'Create'}) }}
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,6 @@
+{# POST + CSRF token: a delete must never be a simple link. #}
+<form method="post" action="{{ path('admin_car_delete', {id: car.id}) }}"
+      onsubmit="return confirm('Delete {{ (car.brand ~ ' ' ~ car.model)|e('js') }}?');">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ car.id) }}">
+    <button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i> Delete</button>
+</form>

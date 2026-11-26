@@ -1,0 +1,29 @@
+{# form_start adds enctype="multipart/form-data" automatically because the form has a file field. #}
+{{ form_start(form) }}
+    <div class="row g-3">
+        <div class="col-md-6">{{ form_row(form.brand) }}</div>
+        <div class="col-md-6">{{ form_row(form.model) }}</div>
+        <div class="col-md-4">{{ form_row(form.year) }}</div>
+        <div class="col-md-4">{{ form_row(form.plateNumber) }}</div>
+        <div class="col-md-4">{{ form_row(form.category) }}</div>
+        <div class="col-md-4">{{ form_row(form.pricePerDay) }}</div>
+        <div class="col-md-3">{{ form_row(form.fuelType) }}</div>
+        <div class="col-md-3">{{ form_row(form.transmission) }}</div>
+        <div class="col-md-2">{{ form_row(form.seats) }}</div>
+        <div class="col-md-8">
+            {{ form_row(form.imageFile) }}
+            {% if car.image ?? false %}
+                <div class="d-flex align-items-center gap-2 small text-muted mb-3">
+                    <img src="{{ asset('uploads/cars/' ~ car.image) }}" alt="" class="rounded" style="width: 96px; height: 64px; object-fit: cover;">
+                    Current photo. Choose a new file to replace it.
+                </div>
+            {% endif %}
+        </div>
+        <div class="col-md-4 d-flex align-items-center">{{ form_row(form.isAvailable) }}</div>
+    </div>
+
+    <div class="d-flex gap-2 mt-2">
+        <button class="btn btn-primary">{{ button_label|default('Save') }}</button>
+        <a href="{{ path('admin_car_index') }}" class="btn btn-outline-secondary">Cancel</a>
+    </div>
+{{ form_end(form) }}
